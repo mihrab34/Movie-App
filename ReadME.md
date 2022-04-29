@@ -1,6 +1,7 @@
 # Movie App
 
-This is a movie app react application where the movie db api was consumed to display popular movies.
+This is a movie app react application where the movie db api was consumed to display popular movies, search for and preview movies.
+
 
 ![movieApp](https://user-images.githubusercontent.com/35562131/165871295-1bc6a722-39d3-4c0e-8487-6c48c0a29122.png)
 
