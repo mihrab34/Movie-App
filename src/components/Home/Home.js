@@ -26,23 +26,23 @@ class Home extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page1`;
+    const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
     this.fetchItems(endpoint);
   }
 
   searchItems = (searchTerm) => {
-    console.log("testing");
+    // console.log(searchTerm);
     let endpoint = "";
     this.setState({
       movies: [],
       loading: true,
-      searchTerm: searchTerm,
+      searchTerm
     });
 
-    if ((searchTerm = "")) {
-      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page1`;
+    if ((searchTerm === "")) {
+      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
     } else {
-      endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&page&query=${searchTerm}`;
+      endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}`;
     }
     this.fetchItems(endpoint);
   };
@@ -51,11 +51,9 @@ class Home extends Component {
     let endpoint = "";
     this.setState({ loading: true });
     if (this.state.searchTerm === "") {
-      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${
-        this.state.currentPage + 1
-      }`;
+      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${this.state.currentPage + 1 }`;
     } else {
-      endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query${
+      endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${
         this.state.searchTerm
       }&page=${this.state.currentPage + 1}`;
     }
@@ -64,15 +62,15 @@ class Home extends Component {
 
   fetchItems = (endpoint) => {
     fetch(endpoint)
-      .then((result) => result.json())
-      .then((result) => {
-        // console.log(result);
+      .then((response) => response.json())
+      .then((response) => {
+        // console.log(response);
         this.setState({
-          movies: [...this.state.movies, ...result.results],
-          heroImage: this.state.heroImage || result.results[0],
+          movies: [...this.state.movies, ...response.results],
+          heroImage: this.state.heroImage || response.results[3],
           loading: false,
-          currentPage: result.page,
-          totalPages: result.total_pages,
+          currentPage: response.page,
+          totalPages: response.total_pages,
         });
       });
   };
@@ -111,9 +109,10 @@ class Home extends Component {
               );
             })}
           </FourColGrid>
+          {this.state.loading ? <Spinner /> : null}
+          {(this.state.currentPage <= this.state.totalPages && !this.state.loading) ? 
+          <LoadMoreBtn text="Load More" onClick={this.loadMoreItems} /> : null}
         </div>
-        <Spinner />
-        <LoadMoreBtn />
       </div>
     );
   }

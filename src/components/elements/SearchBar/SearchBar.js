@@ -8,7 +8,7 @@ class SearchBar extends Component{
     }
     timeout = null;
 
-    doSearch = (event) => {
+    handleSearch = (event) => {
         this.setState({value: event.target.value});
         clearTimeout(this.timeout);
 
@@ -26,7 +26,7 @@ class SearchBar extends Component{
                 type="text"
                 className="rmdb-searchbar-input"
                 placeholder="Search"
-                onChange={this.doSearch}
+                onChange={this.handleSearch}
                 value={this.state.value}
               />
             </div>
