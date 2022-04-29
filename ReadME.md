@@ -25,8 +25,8 @@ Enter this in your terminal 👇
 ## 🕹️ Setup
 ```
   Clone the repository on your machine and cd into it
-  run npm install
-  run npm run start
+  npm install
+  npm run start
 ```
 
 ## 🤝 Contributing
