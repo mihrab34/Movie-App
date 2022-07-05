@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   API_URL,
   API_KEY,
@@ -40,6 +40,9 @@ const Home = () => {
         currentPage: response.page,
         totalPages: response.total_pages,
       }));
+      if (!state.searchTerm) {
+        sessionStorage.setItem("HomeState", JSON.stringify(state));
+      }
     } catch (error) {
       setIsError(true);
     }
@@ -48,21 +51,19 @@ const Home = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem("HomeState")) {
-      const persistedState = JSON.parse(sessionStorage.getItem("HomeState"));
-      setState({
-        ...persistedState,
-      });
+      const state = JSON.parse(sessionStorage.getItem("HomeState"));
+      setState({...state });
     } else {
       const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}`;
       fetchMovies(endpoint);
     }
   }, []);
 
-  useEffect(() => {
-    if (!state.searchTerm) {
-      sessionStorage.setItem("HomeState", JSON.stringify(state));
-    }
-  }, [state]);
+  // useEffect(() => {
+  //   if (!state.searchTerm) {
+  //     sessionStorage.setItem("HomeState", JSON.stringify(state));
+  //   }
+  // }, [state]);
 
   const searchItems = (searchTerm) => {
     let endpoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}`;
@@ -80,7 +81,6 @@ const Home = () => {
     let endpoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${
       currentPage + 1
     }`;
-    setHomePage({ ...homePage, loading: true });
     if (!searchTerm) {
       endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${
         currentPage + 1
