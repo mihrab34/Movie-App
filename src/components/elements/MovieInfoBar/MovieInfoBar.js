@@ -4,6 +4,7 @@ import './MovieInfoBar.css';
 
 
 function MovieInfoBar (props) {
+  const{time, budget,revenue} = props;
     return (
       <div className="rmdb-movieinfobar">
         <div className="rmdb-movieinfobar-content">
@@ -14,7 +15,7 @@ function MovieInfoBar (props) {
               size="2x"
             ></FontAwesome>
             <span className="rmdb-movieinfobar-info">
-              Running Time: {calcTime(props.time)}
+              Running Time: {calcTime(time)}
             </span>
           </div>
           <div className="rmdb-movieinfobar-content-col">
@@ -24,7 +25,7 @@ function MovieInfoBar (props) {
               size="2x"
             ></FontAwesome>
             <span className="rmdb-movieinfobar-info">
-              Budget: {convertMoney(props.budget)}
+              Budget: {convertMoney(budget)}
             </span>
           </div>
           <div className="rmdb-movieinfobar-content-col">
@@ -34,7 +35,7 @@ function MovieInfoBar (props) {
               size="2x"
             ></FontAwesome>
             <span className="rmdb-movieinfobar-info">
-              Revenue: {convertMoney(props.revenue)}
+              Revenue: {convertMoney(revenue)}
             </span>
           </div>
         </div>

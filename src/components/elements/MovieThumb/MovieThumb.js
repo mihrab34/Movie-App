@@ -3,10 +3,10 @@ import PropTypes from "prop-types"
 import "./MovieThumb.css";
 
 const MovieThumb = (props) => {
-  const {image, movieId, movieName } = props;
+  const {image, movieId, movieName, clickable } = props;
   return (
     <div className="rmdb-moviethumb">
-      {props.clickable ? (
+      {clickable ? (
         <Link to={{ pathname: `/${movieId}`, movieName: `${movieName}` }} >
           <img src={image} alt="moviethumb" />
         </Link>
