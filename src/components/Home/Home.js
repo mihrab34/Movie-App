@@ -52,7 +52,7 @@ import "./Home.css";
 //     fetchItems(endpoint);
 //   };
 
-//   const loadMoreItems = () => {
+//   const loadMoreItems = async() => {
 //     let endpoint = "";
 //     setHomepage({ loading: true });
 //     if (homepage.searchTerm === "") {
@@ -64,13 +64,12 @@ import "./Home.css";
 //         homepage.searchTerm
 //       }&page=${homepage.currentPage + 1}`;
 //     }
-//     fetchItems(endpoint);
+//     await fetchItems(endpoint);
 //   };
 
-//   const fetchItems = (endpoint) => {
-//     fetch(endpoint)
-//       .then((response) => response.json())
-//       .then((response) => {
+//   const fetchItems = async(endpoint) => {
+//     const response = await(await fetch(endpoint)).json();
+//
 //         setHomepage({
 //           movies: [...homepage.movies, ...response.results],
 //           heroImage: homepage.heroImage || response.results[4],
@@ -78,7 +77,7 @@ import "./Home.css";
 //           currentPage: response.page,
 //           totalPages: response.total_pages,
 //         });
-//       });
+//
 //   };
 
 //   const { movies, heroImage, loading, currentPage, totalPages, searchTerm } =
@@ -137,16 +136,21 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.setState({ loading: true });
-    const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-    this.fetchItems(endpoint);
+    if (localStorage.getItem("HomeState")) {
+      const state = JSON.parse(localStorage.getItem("HomeState"));
+      this.setState({...state});
+    } else {
+      this.setState({ loading: true });
+      const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+      this.fetchItems(endpoint);
+    }
   }
 
   /**
-   * 
-   * @param {searchValue} searchTerm 
+   *
+   * @param {searchValue} searchTerm
    * return the fetchItems method with the appropriate endpoint
-   * 
+   *
    * if there's a search value, it will return the endpoint with a query parameter
    */
   searchItems = (searchTerm) => {
@@ -155,10 +159,10 @@ class Home extends Component {
     this.setState({
       movies: [],
       loading: true,
-      searchTerm
+      searchTerm,
     });
 
-    if ((searchTerm === "")) {
+    if (searchTerm === "") {
       endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
     } else {
       endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}`;
@@ -170,7 +174,9 @@ class Home extends Component {
     let endpoint = "";
     this.setState({ loading: true });
     if (this.state.searchTerm === "") {
-      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${this.state.currentPage + 1 }`;
+      endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=${
+        this.state.currentPage + 1
+      }`;
     } else {
       endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${
         this.state.searchTerm
@@ -184,13 +190,20 @@ class Home extends Component {
       .then((response) => response.json())
       .then((response) => {
         // console.log(response);
-        this.setState({
-          movies: [...this.state.movies, ...response.results],
-          heroImage: this.state.heroImage || response.results[4],
-          loading: false,
-          currentPage: response.page,
-          totalPages: response.total_pages,
-        });
+        this.setState(
+          {
+            movies: [...this.state.movies, ...response.results],
+            heroImage: this.state.heroImage || response.results[4],
+            loading: false,
+            currentPage: response.page,
+            totalPages: response.total_pages,
+          },
+          () => {
+            if(this.state.searchTerm === ''){
+              localStorage.setItem("HomeState", JSON.stringify(this.state));
+            }
+          }
+        );
       });
   };
 
@@ -229,8 +242,10 @@ class Home extends Component {
             })}
           </FourColGrid>
           {this.state.loading ? <Spinner /> : null}
-          {(this.state.currentPage <= this.state.totalPages && !this.state.loading) ?
-          <LoadMoreBtn text="Load More" onClick={this.loadMoreItems} /> : null}
+          {this.state.currentPage <= this.state.totalPages &&
+          !this.state.loading ? (
+            <LoadMoreBtn text="Load More" onClick={this.loadMoreItems} />
+          ) : null}
         </div>
       </div>
     );

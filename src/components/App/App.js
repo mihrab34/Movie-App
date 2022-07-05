@@ -3,21 +3,21 @@ import Header from '../elements/Header/Header';
 import Home from '../Home/Home';
 import NotFound from '../elements/NotFound/NotFound';
 import Movie from '../Movie/Movie';
-import { BrowserRouter as Router , Routes, Route } from 'react-router-dom';
+import { BrowserRouter , Switch, Route } from 'react-router-dom';
 
 const App = () => {
     return (
-      <Router>
+      <BrowserRouter>
         <>
           <Header />
-          <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/:movieId" exact element={<Movie />} />
-            <Route  element={<NotFound />} path="*" />
+          <Switch>
+            <Route path="/" exact component={Home } />
+            <Route path="/:movieId" exact component={Movie} />
+            <Route  component={NotFound} path="*" />
 
-          </Routes>
+          </Switch>
         </>
-      </Router>
+      </BrowserRouter>
     );
 }
 
