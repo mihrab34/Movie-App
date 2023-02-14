@@ -12,6 +12,10 @@ This is a movie app react application where the movie db api was consumed to dis
 - JavaScript
 - React
 
+## Live Preview
+
+https://movie-app-sable-eta.vercel.app/
+
 ## Getting Started
 
 To get a local copy up and running on your machine, follow these simple steps.
